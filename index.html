@@ -4,30 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>রাউটার ড্যাশবোর্ড</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #0f1117;
-  --surface: #181c27;
-  --surface2: #1e2333;
-  --border: rgba(255,255,255,0.07);
-  --border-hover: rgba(255,255,255,0.14);
-  --text: #e8eaf0;
-  --text-muted: #7a8099;
-  --text-dim: #4a5068;
-  --green: #22d3a0;
-  --green-bg: rgba(34,211,160,0.1);
-  --green-border: rgba(34,211,160,0.25);
-  --red: #f0556a;
-  --red-bg: rgba(240,85,106,0.1);
-  --red-border: rgba(240,85,106,0.25);
-  --amber: #f5a623;
-  --amber-bg: rgba(245,166,35,0.1);
-  --amber-border: rgba(245,166,35,0.25);
-  --blue: #4da6ff;
-  --radius: 12px;
-  --font: 'IBM Plex Sans', sans-serif;
-  --mono: 'IBM Plex Mono', monospace;
+  --bg:        #f7f5f0;
+  --white:     #ffffff;
+  --border:    rgba(0,0,0,0.07);
+  --border-md: rgba(0,0,0,0.11);
+  --text:      #16130e;
+  --text-2:    #5c5648;
+  --text-3:    #9c9485;
+
+  --green:        #1a7a55;
+  --green-light:  #e8f5ee;
+  --green-border: rgba(26,122,85,0.2);
+
+  --red:        #b83232;
+  --red-light:  #fceaea;
+  --red-border: rgba(184,50,50,0.2);
+
+  --amber:        #9a6200;
+  --amber-light:  #fdf3dc;
+  --amber-border: rgba(154,98,0,0.2);
+
+  --blue:       #1b5db5;
+
+  --radius: 16px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05);
+
+  --font:    'DM Sans', sans-serif;
+  --display: 'Playfair Display', serif;
+  --mono:    'DM Mono', monospace;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,356 +46,234 @@ body {
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  padding: 1.5rem 1rem;
+  padding: 2.5rem 1.25rem 3rem;
 }
 
-/* Background grid texture */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-  z-index: 0;
+.dash { max-width: 1080px; margin: 0 auto; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.dash {
-  max-width: 1100px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-
-/* ── Header ── */
+/* ── HEADER ── */
 .header {
-  display: flex;
-  align-items: center;
+  display: flex; align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  margin-bottom: 2rem; gap: 1rem; flex-wrap: wrap;
+  animation: fadeUp 0.45s ease both;
 }
 
-.header-left { display: flex; align-items: center; gap: 12px; }
+.header-brand { display: flex; align-items: center; gap: 14px; }
 
-.logo-mark {
-  width: 36px; height: 36px;
-  background: linear-gradient(135deg, #22d3a0, #4da6ff);
-  border-radius: 10px;
+.logo {
+  width: 48px; height: 48px;
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: var(--shadow-md);
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  flex-shrink: 0;
+  border: 1px solid var(--border); flex-shrink: 0;
 }
 
 .header h1 {
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--display);
+  font-size: 26px; font-weight: 600;
+  letter-spacing: -0.02em; line-height: 1.1;
 }
 
-.header-sub {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 1px;
+.header-tagline {
+  font-size: 11.5px; color: var(--text-3);
+  margin-top: 3px; letter-spacing: 0.05em;
+  text-transform: uppercase; font-weight: 400;
 }
 
 .btn-refresh {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-family: var(--font);
-  padding: 8px 16px;
-  border-radius: 8px;
-  border: 1px solid var(--border-hover);
-  background: var(--surface);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 20px; border-radius: 50px;
+  border: 1px solid var(--border-md);
+  background: var(--white); color: var(--text-2);
+  font-family: var(--font); font-size: 13px; font-weight: 500;
+  cursor: pointer; box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease; white-space: nowrap;
 }
-
-.btn-refresh:hover { background: var(--surface2); color: var(--text); border-color: rgba(255,255,255,0.2); }
-.btn-refresh svg { transition: transform 0.5s; }
-.btn-refresh.spinning svg { animation: spin 0.5s linear; }
+.btn-refresh:hover { background: var(--text); color: #fff; border-color: var(--text); box-shadow: var(--shadow-md); }
+.btn-refresh svg { transition: transform 0.5s ease; }
+.btn-refresh.spinning svg { animation: spin 0.5s ease; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── Stats Bar ── */
+/* ── STATS ── */
 .stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 1.25rem;
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 12px; margin-bottom: 1.5rem;
 }
 
 .stat {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 14px 16px;
-  position: relative;
-  overflow: hidden;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  animation: fadeUp 0.5s ease both;
 }
-
-.stat::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 2px;
-}
-
-.stat.s-total::after { background: linear-gradient(90deg, #4da6ff, transparent); }
-.stat.s-online::after { background: linear-gradient(90deg, #22d3a0, transparent); }
-.stat.s-offline::after { background: linear-gradient(90deg, #f0556a, transparent); }
+.stat:nth-child(1){animation-delay:.05s}
+.stat:nth-child(2){animation-delay:.1s}
+.stat:nth-child(3){animation-delay:.15s}
 
 .stat-label {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 8px;
+  font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  color: var(--text-3); margin-bottom: 8px;
 }
-
-.stat-val {
-  font-size: 28px;
-  font-weight: 600;
-  font-family: var(--mono);
-  line-height: 1;
-}
-
-.stat.s-total .stat-val { color: var(--blue); }
+.stat-val { font-family: var(--display); font-size: 34px; font-weight: 600; line-height: 1; }
+.stat.s-total  { border-bottom: 2px solid rgba(22,19,14,0.12); }
+.stat.s-total  .stat-val { color: var(--text); }
+.stat.s-online { border-bottom: 2px solid rgba(26,122,85,0.35); }
 .stat.s-online .stat-val { color: var(--green); }
+.stat.s-offline { border-bottom: 2px solid rgba(184,50,50,0.35); }
 .stat.s-offline .stat-val { color: var(--red); }
 
-/* ── Notice ── */
+/* ── NOTICE ── */
 .notice {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--amber-bg);
-  border: 1px solid var(--amber-border);
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin-bottom: 1.25rem;
-  font-size: 12px;
-  color: var(--amber);
+  display: flex; align-items: center; gap: 8px;
+  background: var(--amber-light); border: 1px solid var(--amber-border);
+  border-radius: 10px; padding: 10px 16px;
+  font-size: 12.5px; color: var(--amber); font-weight: 500;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.5s 0.2s ease both;
 }
 
-/* ── Grid ── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 12px;
-}
+/* ── GRID ── */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px,1fr)); gap: 14px; }
 
-/* ── Card ── */
+/* ── CARD ── */
 .card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1rem 1.125rem;
-  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
-  cursor: default;
-  position: relative;
-  overflow: hidden;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem 1.375rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.25s, transform 0.2s, border-color 0.2s;
+  position: relative; overflow: hidden;
+  animation: fadeUp 0.55s ease both;
 }
+.card:nth-child(1){animation-delay:.1s} .card:nth-child(2){animation-delay:.17s}
+.card:nth-child(3){animation-delay:.24s} .card:nth-child(4){animation-delay:.31s}
+.card:nth-child(5){animation-delay:.38s} .card:nth-child(6){animation-delay:.45s}
+.card:nth-child(7){animation-delay:.52s}
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); border-color: var(--border-md); }
 
-.card:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+.card::before {
+  content:''; position:absolute; top:0; left:0; right:0;
+  height:3px; border-radius: var(--radius) var(--radius) 0 0;
 }
+.card.online::before  { background: linear-gradient(90deg,#1a7a55,#5ccea0); }
+.card.offline::before { background: linear-gradient(90deg,#b83232,#e07070); }
+.card.checking::before { background: linear-gradient(90deg,#d4a800,#f5c842); background-size:200%; animation: shimBar 1.5s linear infinite; }
+@keyframes shimBar { 0%{background-position:100%} 100%{background-position:-100%} }
 
-.card.online { border-left: 2px solid var(--green); }
-.card.offline { border-left: 2px solid var(--red); }
-.card.checking { border-left: 2px solid var(--amber); }
-
-/* Subtle glow per status */
-.card.online::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, var(--green), transparent 60%); opacity:0.5; }
-.card.offline::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, var(--red), transparent 60%); opacity:0.5; }
-.card.checking::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, var(--amber), transparent 60%); opacity:0.5; }
-
-/* ── Card Top ── */
+/* ── CARD TOP ── */
 .card-top {
-  display: flex;
-  align-items: center;
+  display: flex; align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 14px; gap: 8px;
 }
-
-.card-left { display: flex; align-items: center; gap: 10px; }
+.card-left { display: flex; align-items: center; gap: 12px; }
 
 .brand-icon {
-  width: 40px; height: 40px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; box-shadow: var(--shadow-sm);
 }
+.brand-icon svg { width: 24px; height: 24px; }
+.icon-isp    { background:#e8effc; border:1px solid rgba(27,93,181,.15); }
+.icon-asus   { background:#e8f5ee; border:1px solid rgba(26,122,85,.15); }
+.icon-tplink { background:#e8effc; border:1px solid rgba(27,93,181,.15); }
+.icon-tenda  { background:#fdf3dc; border:1px solid rgba(154,98,0,.15); }
+.icon-ruijie { background:#fceaea; border:1px solid rgba(184,50,50,.15); }
 
-.brand-icon svg, .brand-icon img { width: 26px; height: 26px; }
+.router-name { font-size:15px; font-weight:600; letter-spacing:-0.01em; margin-bottom:2px; }
+.router-meta { font-size:11.5px; color:var(--text-3); }
 
-/* Brand color schemes */
-.icon-isp   { background: rgba(30, 100, 200, 0.15); border: 1px solid rgba(30,100,200,0.3); }
-.icon-asus  { background: rgba(0, 176, 104, 0.12); border: 1px solid rgba(0,176,104,0.3); }
-.icon-tplink{ background: rgba(15, 92, 210, 0.12); border: 1px solid rgba(15,92,210,0.3); }
-.icon-tenda { background: rgba(230, 80, 30, 0.12); border: 1px solid rgba(230,80,30,0.3); }
-.icon-ruijie{ background: rgba(200, 50, 50, 0.12); border: 1px solid rgba(200,50,50,0.3); }
-
-.router-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
-.router-role { font-size: 11px; color: var(--text-muted); }
-
-/* ── Badge ── */
+/* ── BADGE ── */
 .badge {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  font-weight: 500;
-  padding: 4px 10px;
-  border-radius: 20px;
-  white-space: nowrap;
-  flex-shrink: 0;
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:600; letter-spacing:.02em;
+  padding:4px 11px; border-radius:50px;
+  flex-shrink:0; white-space:nowrap;
 }
+.badge .dot { width:6px; height:6px; border-radius:50%; }
+.badge.online  { background:var(--green-light); color:var(--green); border:1px solid var(--green-border); }
+.badge.offline { background:var(--red-light);   color:var(--red);   border:1px solid var(--red-border); }
+.badge.checking{ background:var(--amber-light); color:var(--amber); border:1px solid var(--amber-border); }
+.badge.online  .dot { background:var(--green); animation:blink 2s ease infinite; }
+.badge.offline .dot { background:var(--red); }
+.badge.checking .dot { background:var(--amber); animation:blink .8s ease infinite; }
+@keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.7)} }
 
-.badge .dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-}
-
-.badge.online  { background: var(--green-bg);  color: var(--green); border: 1px solid var(--green-border); }
-.badge.offline { background: var(--red-bg);    color: var(--red);   border: 1px solid var(--red-border); }
-.badge.checking { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
-
-.badge.online .dot  { background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
-.badge.offline .dot { background: var(--red); }
-.badge.checking .dot { background: var(--amber); animation: pulse 1s infinite; }
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-/* ── Info Rows ── */
-.info-rows { border-top: 1px solid var(--border); }
-
+/* ── INFO ROWS ── */
+.info-rows { border-top:1px solid var(--border); margin-bottom:12px; }
 .info-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 7px 0;
-  border-bottom: 1px solid var(--border);
+  display:flex; justify-content:space-between; align-items:center;
+  padding:8px 0; border-bottom:1px solid var(--border);
 }
+.info-row:last-child { border-bottom:none; }
+.info-key { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:.06em; color:var(--text-3); }
+.info-val { font-family:var(--mono); font-size:12px; color:var(--text-2); }
+.ping-good { color:var(--green); font-weight:600; }
+.ping-mid  { color:var(--amber); font-weight:600; }
+.ping-bad  { color:var(--red);   font-weight:600; }
+.ping-na   { color:var(--text-3); }
 
-.info-row:last-of-type { border-bottom: none; }
-
-.info-key {
-  font-size: 11px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.info-val {
-  font-size: 12px;
-  font-weight: 500;
-  font-family: var(--mono);
-  color: var(--text-muted);
-}
-
-.ping-good { color: var(--green); }
-.ping-mid  { color: var(--amber); }
-.ping-bad  { color: var(--red); }
-.ping-na   { color: var(--text-dim); }
-
-/* ── Admin Link ── */
+/* ── ADMIN BTN ── */
 .btn-admin {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 12px;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid var(--border-hover);
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 12px;
-  font-family: var(--font);
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  padding:9px 16px; border-radius:10px;
+  border:1px solid var(--border-md); background:var(--bg);
+  color:var(--text-2); font-family:var(--font); font-size:12.5px; font-weight:500;
+  text-decoration:none; cursor:pointer;
+  transition:all .2s ease; width:100%;
 }
+.btn-admin:hover { background:var(--text); color:#fff; border-color:var(--text); box-shadow:0 4px 12px rgba(22,19,14,.18); }
 
-.btn-admin:hover {
-  background: rgba(77,166,255,0.08);
-  border-color: rgba(77,166,255,0.3);
-  color: var(--blue);
-}
-
-/* ── Footer ── */
+/* ── FOOTER ── */
 .footer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-  font-size: 11px;
-  color: var(--text-dim);
-  font-family: var(--mono);
+  text-align:right; margin-top:1.5rem;
+  font-size:11px; color:var(--text-3); font-family:var(--mono);
+  animation: fadeUp .5s .6s ease both;
 }
 
-/* ── Responsive ── */
-@media (max-width: 600px) {
-  body { padding: 1rem 0.75rem; }
-  .stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .stat { padding: 10px 12px; }
-  .stat-val { font-size: 22px; }
-  .stat-label { font-size: 10px; }
-  .grid { grid-template-columns: 1fr; gap: 10px; }
-  .header h1 { font-size: 16px; }
+/* ── RESPONSIVE ── */
+@media (max-width:560px) {
+  body { padding: 1.5rem .875rem 2rem; }
+  .header h1 { font-size:20px; }
+  .logo { width:40px; height:40px; border-radius:12px; }
+  .stats { gap:8px; }
+  .stat { padding:12px; }
+  .stat-val { font-size:26px; }
+  .stat-label { font-size:10px; }
+  .grid { grid-template-columns:1fr; gap:10px; }
+  .btn-refresh span { display:none; }
+  .btn-refresh { padding:10px 14px; }
 }
-
-@media (min-width: 601px) and (max-width: 900px) {
-  .grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* Loading shimmer */
-@keyframes shimmer {
-  0% { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
-}
-
-.card.checking .router-name {
-  background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%);
-  background-size: 400px 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: 4px;
-  color: transparent;
+@media (min-width:561px) and (max-width:860px) {
+  .grid { grid-template-columns:repeat(2,1fr); }
 }
 </style>
 </head>
 <body>
 <div class="dash">
 
-  <!-- Header -->
   <div class="header">
-    <div class="header-left">
-      <div class="logo-mark">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="6" width="20" height="8" rx="2"/>
-          <line x1="6" y1="10" x2="6" y2="10" stroke-width="3"/>
-          <line x1="10" y1="10" x2="10" y2="10" stroke-width="3"/>
-          <line x1="18" y1="14" x2="18" y2="18"/>
-          <line x1="6" y1="14" x2="6" y2="18"/>
-          <line x1="12" y1="14" x2="12" y2="18"/>
+    <div class="header-brand">
+      <div class="logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16130e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="10" rx="3"/>
+          <circle cx="6.5" cy="12" r="1.2" fill="#16130e"/>
+          <circle cx="10.5" cy="12" r="1.2" fill="#16130e"/>
+          <line x1="14" y1="10" x2="19" y2="10"/>
+          <line x1="14" y1="12" x2="19" y2="12"/>
+          <line x1="14" y1="14" x2="17" y2="14"/>
         </svg>
       </div>
       <div>
         <h1>রাউটার ড্যাশবোর্ড</h1>
-        <div class="header-sub">নেটওয়ার্ক মনিটরিং সিস্টেম</div>
+        <div class="header-tagline">নেটওয়ার্ক মনিটরিং · লাইভ স্ট্যাটাস</div>
       </div>
     </div>
     <button class="btn-refresh" onclick="checkAll(this)">
@@ -394,14 +281,13 @@ body::before {
         <polyline points="23 4 23 10 17 10"/>
         <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
       </svg>
-      রিফ্রেশ
+      <span>রিফ্রেশ করুন</span>
     </button>
   </div>
 
-  <!-- Stats -->
   <div class="stats">
     <div class="stat s-total">
-      <div class="stat-label">মোট</div>
+      <div class="stat-label">মোট রাউটার</div>
       <div class="stat-val" id="total">7</div>
     </div>
     <div class="stat s-online">
@@ -414,181 +300,98 @@ body::before {
     </div>
   </div>
 
-  <!-- Notice -->
   <div class="notice">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-    প্রতি ৩০ সেকেন্ডে অটো-রিফ্রেশ হয় · সব রাউটারের অ্যাডমিন প্যানেলে সরাসরি ঢোকা যাবে
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    প্রতি ৩০ সেকেন্ডে অটো-রিফ্রেশ হয় · সব রাউটারের অ্যাডমিন প্যানেলে সরাসরি অ্যাক্সেস করা যাবে
   </div>
 
-  <!-- Cards -->
   <div class="grid" id="router-grid"></div>
-
-  <!-- Footer -->
   <div class="footer" id="last-updated"></div>
 </div>
 
 <script>
-// ── Brand SVG Icons ──
 const ICONS = {
-  ISP: `<svg viewBox="0 0 24 24" fill="none" stroke="#4da6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-    <path d="M2 17l10 5 10-5"/>
-    <path d="M2 12l10 5 10-5"/>
-  </svg>`,
-
-  ASUS: `<svg viewBox="0 0 24 24" fill="none" stroke="#22d3a0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="2" y="6" width="20" height="12" rx="2"/>
-    <circle cx="7" cy="12" r="1.5" fill="#22d3a0"/>
-    <circle cx="11" cy="12" r="1.5" fill="#22d3a0"/>
-    <line x1="15" y1="9" x2="20" y2="9"/>
-    <line x1="15" y1="12" x2="20" y2="12"/>
-    <line x1="15" y1="15" x2="18" y2="15"/>
-  </svg>`,
-
-  'TP-Link': `<svg viewBox="0 0 24 24" fill="none" stroke="#4da6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
-    <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/>
-    <circle cx="12" cy="12" r="2" fill="#4da6ff"/>
-  </svg>`,
-
-  Tenda: `<svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
-    <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
-    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
-    <circle cx="12" cy="20" r="1" fill="#f5a623"/>
-  </svg>`,
-
-  Ruijie: `<svg viewBox="0 0 24 24" fill="none" stroke="#f0556a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-    <polyline points="9 12 11 14 15 10"/>
-  </svg>`,
+  ISP:`<svg viewBox="0 0 24 24" fill="none" stroke="#1b5db5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>`,
+  ASUS:`<svg viewBox="0 0 24 24" fill="none" stroke="#1a7a55" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="7" cy="12" r="1.5" fill="#1a7a55"/><circle cx="11" cy="12" r="1.5" fill="#1a7a55"/><line x1="15" y1="9" x2="20" y2="9"/><line x1="15" y1="12" x2="20" y2="12"/><line x1="15" y1="15" x2="18" y2="15"/></svg>`,
+  'TP-Link':`<svg viewBox="0 0 24 24" fill="none" stroke="#1b5db5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="#1b5db5"/></svg>`,
+  Tenda:`<svg viewBox="0 0 24 24" fill="none" stroke="#9a6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="#9a6200"/></svg>`,
+  Ruijie:`<svg viewBox="0 0 24 24" fill="none" stroke="#b83232" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>`,
 };
+const ICON_CLASS = { ISP:'icon-isp',ASUS:'icon-asus','TP-Link':'icon-tplink',Tenda:'icon-tenda',Ruijie:'icon-ruijie' };
 
-const ICON_CLASS = {
-  ISP: 'icon-isp',
-  ASUS: 'icon-asus',
-  'TP-Link': 'icon-tplink',
-  Tenda: 'icon-tenda',
-  Ruijie: 'icon-ruijie',
-};
-
-// ── Router Data ──
 const routers = [
-  { id:1, name:"ONU / Modem",   brand:"ISP",     ip:"192.168.100.1",                          role:"ISP Gateway" },
-  { id:2, name:"Main Router",   brand:"ASUS",    ip:"192.168.1.1",                            role:"Primary Router" },
-  { id:3, name:"Sub Main (TL)", brand:"TP-Link", ip:"192.168.0.1",                            role:"Sub Router" },
-  { id:4, name:"TP-Link (AB)",  brand:"TP-Link", ip:"192.168.0.101:8080",                     role:"Access Point" },
-  { id:5, name:"Tenda (B3)",    brand:"Tenda",   ip:"192.168.0.102:8080",                     role:"Access Point" },
-  { id:6, name:"Tenda (S)",     brand:"Tenda",   ip:"192.168.0.103:8080",                     role:"Access Point" },
-  { id:7, name:"Ruijie (CD)",   brand:"Ruijie",  ip:"cloud-as.ruijienetworks.com/sso/login",  role:"Cloud AP" },
+  {id:1,name:"ONU / Modem",   brand:"ISP",     ip:"192.168.100.1",                         role:"ISP Gateway"},
+  {id:2,name:"Main Router",   brand:"ASUS",    ip:"192.168.1.1",                           role:"Primary Router"},
+  {id:3,name:"Sub Main (TL)", brand:"TP-Link", ip:"192.168.0.1",                           role:"Sub Router"},
+  {id:4,name:"TP-Link (AB)",  brand:"TP-Link", ip:"192.168.0.101:8080",                    role:"Access Point"},
+  {id:5,name:"Tenda (B3)",    brand:"Tenda",   ip:"192.168.0.102:8080",                    role:"Access Point"},
+  {id:6,name:"Tenda (S)",     brand:"Tenda",   ip:"192.168.0.103:8080",                    role:"Access Point"},
+  {id:7,name:"Ruijie (CD)",   brand:"Ruijie",  ip:"cloud-as.ruijienetworks.com/sso/login", role:"Cloud AP"},
 ];
 
 const state = {};
-routers.forEach(r => state[r.id] = { status:"checking", ping:null });
+routers.forEach(r => state[r.id]={status:"checking",ping:null});
 
-// ── Render ──
 function renderCards() {
-  const grid = document.getElementById("router-grid");
-  grid.innerHTML = routers.map(r => {
+  const g = document.getElementById("router-grid");
+  g.innerHTML = routers.map(r => {
     const s = state[r.id];
-    const icon = ICONS[r.brand] || ICONS['TP-Link'];
-    const iconClass = ICON_CLASS[r.brand] || 'icon-isp';
-
-    let pingHtml;
-    if (s.ping !== null) {
-      const cls = s.ping < 50 ? 'ping-good' : s.ping < 150 ? 'ping-mid' : 'ping-bad';
-      pingHtml = `<span class="info-val ${cls}">${s.ping}ms</span>`;
-    } else {
-      pingHtml = `<span class="info-val ping-na">—</span>`;
-    }
-
-    const labelMap = { online:'অনলাইন', offline:'অফলাইন', checking:'চেক হচ্ছে' };
-
+    const labels = {online:'অনলাইন',offline:'অফলাইন',checking:'চেক হচ্ছে'};
+    let pingHtml = s.ping !== null
+      ? `<span class="info-val ${s.ping<50?'ping-good':s.ping<150?'ping-mid':'ping-bad'}">${s.ping} ms</span>`
+      : `<span class="info-val ping-na">—</span>`;
     return `
     <div class="card ${s.status}">
       <div class="card-top">
         <div class="card-left">
-          <div class="brand-icon ${iconClass}">${icon}</div>
+          <div class="brand-icon ${ICON_CLASS[r.brand]||'icon-isp'}">${ICONS[r.brand]||ICONS['TP-Link']}</div>
           <div>
             <div class="router-name">${r.name}</div>
-            <div class="router-role">${r.brand} · ${r.role}</div>
+            <div class="router-meta">${r.brand} · ${r.role}</div>
           </div>
         </div>
-        <span class="badge ${s.status}">
-          <span class="dot"></span>
-          ${labelMap[s.status]}
-        </span>
+        <span class="badge ${s.status}"><span class="dot"></span>${labels[s.status]}</span>
       </div>
-
       <div class="info-rows">
-        <div class="info-row">
-          <span class="info-key">IP ঠিকানা</span>
-          <span class="info-val">${r.ip}</span>
-        </div>
-        <div class="info-row">
-          <span class="info-key">পিং</span>
-          ${pingHtml}
-        </div>
+        <div class="info-row"><span class="info-key">IP ঠিকানা</span><span class="info-val">${r.ip}</span></div>
+        <div class="info-row"><span class="info-key">রেসপন্স</span>${pingHtml}</div>
       </div>
-
       <a class="btn-admin" href="http://${r.ip}" target="_blank" rel="noopener">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-        অ্যাডমিন প্যানেল
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
-        </svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        অ্যাডমিন প্যানেল খুলুন
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
       </a>
     </div>`;
   }).join("");
-
-  updateStats();
+  const online=Object.values(state).filter(s=>s.status==="online").length;
+  const offline=Object.values(state).filter(s=>s.status==="offline").length;
+  document.getElementById("online-count").textContent=online;
+  document.getElementById("offline-count").textContent=offline;
+  document.getElementById("last-updated").textContent="সর্বশেষ আপডেট · "+new Date().toLocaleTimeString('bn-BD');
 }
 
-function updateStats() {
-  const online  = Object.values(state).filter(s => s.status === "online").length;
-  const offline = Object.values(state).filter(s => s.status === "offline").length;
-  document.getElementById("online-count").textContent  = online;
-  document.getElementById("offline-count").textContent = offline;
-  const now = new Date();
-  document.getElementById("last-updated").textContent =
-    "আপডেট: " + now.toLocaleTimeString('bn-BD');
-}
-
-// ── Check single router ──
-async function checkRouter(router) {
-  state[router.id].status = "checking";
-  renderCards();
-  const start = Date.now();
+async function checkRouter(r) {
+  state[r.id].status="checking"; renderCards();
+  const start=Date.now();
   try {
-    const ctrl = new AbortController();
-    const timeout = setTimeout(() => ctrl.abort(), 3000);
-    await fetch(`http://${router.ip}`, { mode:"no-cors", signal: ctrl.signal, cache:"no-store" });
-    clearTimeout(timeout);
-    state[router.id] = { status:"online", ping: Date.now() - start };
+    const ctrl=new AbortController();
+    const t=setTimeout(()=>ctrl.abort(),3000);
+    await fetch(`http://${r.ip}`,{mode:"no-cors",signal:ctrl.signal,cache:"no-store"});
+    clearTimeout(t);
+    state[r.id]={status:"online",ping:Date.now()-start};
   } catch(e) {
-    state[router.id] = e.name === "AbortError"
-      ? { status:"offline", ping:null }
-      : { status:"online",  ping: Date.now() - start };
+    state[r.id]=e.name==="AbortError"?{status:"offline",ping:null}:{status:"online",ping:Date.now()-start};
   }
   renderCards();
 }
 
-// ── Check all ──
 function checkAll(btn) {
-  if (btn) {
-    btn.classList.add('spinning');
-    setTimeout(() => btn.classList.remove('spinning'), 500);
-  }
-  routers.forEach(r => checkRouter(r));
+  if(btn){btn.classList.add('spinning');setTimeout(()=>btn.classList.remove('spinning'),500);}
+  routers.forEach(r=>checkRouter(r));
 }
 
-// Init
-renderCards();
-checkAll();
-setInterval(() => checkAll(), 30000);
+renderCards(); checkAll();
+setInterval(()=>checkAll(),30000);
 </script>
 </body>
 </html>
