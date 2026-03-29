@@ -4,153 +4,560 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>রাউটার ড্যাশবোর্ড</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: system-ui, -apple-system, sans-serif; background: #f5f5f0; color: #1a1a1a; min-height: 100vh; padding: 2rem; }
-  .dash { max-width: 960px; margin: 0 auto; }
-  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-  .header h2 { font-size: 22px; font-weight: 500; }
-  .header button { font-size: 13px; padding: 8px 16px; border-radius: 8px; border: 0.5px solid #ccc; background: white; color: #555; cursor: pointer; }
-  .header button:hover { background: #f0f0f0; }
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1.5rem; }
-  .stat { background: white; border-radius: 8px; padding: 14px 16px; border: 0.5px solid #e0e0e0; }
-  .stat-label { font-size: 12px; color: #888; margin-bottom: 6px; }
-  .stat-val { font-size: 22px; font-weight: 500; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
-  .card { background: white; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 1rem 1.25rem; }
-  .card.online { border-left: 3px solid #1D9E75; }
-  .card.offline { border-left: 3px solid #E24B4A; }
-  .card.checking { border-left: 3px solid #EF9F27; }
-  .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .brand-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; }
-  .badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
-  .badge.online { background: #EAF3DE; color: #3B6D11; }
-  .badge.offline { background: #FCEBEB; color: #A32D2D; }
-  .badge.checking { background: #FAEEDA; color: #854F0B; }
-  .router-name { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
-  .router-brand { font-size: 12px; color: #888; }
-  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-top: 0.5px solid #eee; }
-  .info-key { font-size: 12px; color: #888; }
-  .info-val { font-size: 12px; font-weight: 500; }
-  .card-actions { margin-top: 12px; }
-  .btn-link { display: block; text-align: center; padding: 7px; border-radius: 8px; border: 0.5px solid #ccc; font-size: 12px; color: #555; cursor: pointer; background: transparent; text-decoration: none; }
-  .btn-link:hover { background: #f5f5f5; }
-  .ping-val { font-size: 11px; }
-  .ping-val.good { color: #1D9E75; }
-  .ping-val.bad { color: #E24B4A; }
-  .ping-val.mid { color: #EF9F27; }
-  .note { font-size: 12px; color: #666; background: #fffbf0; border-radius: 8px; padding: 10px 14px; margin-bottom: 1.5rem; border-left: 3px solid #EF9F27; }
-  .last-updated { font-size: 11px; color: #aaa; text-align: right; margin-top: 1rem; }
+:root {
+  --bg: #0f1117;
+  --surface: #181c27;
+  --surface2: #1e2333;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.14);
+  --text: #e8eaf0;
+  --text-muted: #7a8099;
+  --text-dim: #4a5068;
+  --green: #22d3a0;
+  --green-bg: rgba(34,211,160,0.1);
+  --green-border: rgba(34,211,160,0.25);
+  --red: #f0556a;
+  --red-bg: rgba(240,85,106,0.1);
+  --red-border: rgba(240,85,106,0.25);
+  --amber: #f5a623;
+  --amber-bg: rgba(245,166,35,0.1);
+  --amber-border: rgba(245,166,35,0.25);
+  --blue: #4da6ff;
+  --radius: 12px;
+  --font: 'IBM Plex Sans', sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 1.5rem 1rem;
+}
+
+/* Background grid texture */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dash {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.header-left { display: flex; align-items: center; gap: 12px; }
+
+.logo-mark {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, #22d3a0, #4da6ff);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.header-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.btn-refresh {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-family: var(--font);
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-hover);
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-refresh:hover { background: var(--surface2); color: var(--text); border-color: rgba(255,255,255,0.2); }
+.btn-refresh svg { transition: transform 0.5s; }
+.btn-refresh.spinning svg { animation: spin 0.5s linear; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Stats Bar ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+}
+
+.stat.s-total::after { background: linear-gradient(90deg, #4da6ff, transparent); }
+.stat.s-online::after { background: linear-gradient(90deg, #22d3a0, transparent); }
+.stat.s-offline::after { background: linear-gradient(90deg, #f0556a, transparent); }
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.stat-val {
+  font-size: 28px;
+  font-weight: 600;
+  font-family: var(--mono);
+  line-height: 1;
+}
+
+.stat.s-total .stat-val { color: var(--blue); }
+.stat.s-online .stat-val { color: var(--green); }
+.stat.s-offline .stat-val { color: var(--red); }
+
+/* ── Notice ── */
+.notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 1.25rem;
+  font-size: 12px;
+  color: var(--amber);
+}
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 12px;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.125rem;
+  transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.card.online { border-left: 2px solid var(--green); }
+.card.offline { border-left: 2px solid var(--red); }
+.card.checking { border-left: 2px solid var(--amber); }
+
+/* Subtle glow per status */
+.card.online::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, var(--green), transparent 60%); opacity:0.5; }
+.card.offline::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, var(--red), transparent 60%); opacity:0.5; }
+.card.checking::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background: linear-gradient(90deg, var(--amber), transparent 60%); opacity:0.5; }
+
+/* ── Card Top ── */
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-left { display: flex; align-items: center; gap: 10px; }
+
+.brand-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.brand-icon svg, .brand-icon img { width: 26px; height: 26px; }
+
+/* Brand color schemes */
+.icon-isp   { background: rgba(30, 100, 200, 0.15); border: 1px solid rgba(30,100,200,0.3); }
+.icon-asus  { background: rgba(0, 176, 104, 0.12); border: 1px solid rgba(0,176,104,0.3); }
+.icon-tplink{ background: rgba(15, 92, 210, 0.12); border: 1px solid rgba(15,92,210,0.3); }
+.icon-tenda { background: rgba(230, 80, 30, 0.12); border: 1px solid rgba(230,80,30,0.3); }
+.icon-ruijie{ background: rgba(200, 50, 50, 0.12); border: 1px solid rgba(200,50,50,0.3); }
+
+.router-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.router-role { font-size: 11px; color: var(--text-muted); }
+
+/* ── Badge ── */
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+}
+
+.badge.online  { background: var(--green-bg);  color: var(--green); border: 1px solid var(--green-border); }
+.badge.offline { background: var(--red-bg);    color: var(--red);   border: 1px solid var(--red-border); }
+.badge.checking { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+
+.badge.online .dot  { background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite; }
+.badge.offline .dot { background: var(--red); }
+.badge.checking .dot { background: var(--amber); animation: pulse 1s infinite; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── Info Rows ── */
+.info-rows { border-top: 1px solid var(--border); }
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.info-row:last-of-type { border-bottom: none; }
+
+.info-key {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.info-val {
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--mono);
+  color: var(--text-muted);
+}
+
+.ping-good { color: var(--green); }
+.ping-mid  { color: var(--amber); }
+.ping-bad  { color: var(--red); }
+.ping-na   { color: var(--text-dim); }
+
+/* ── Admin Link ── */
+.btn-admin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border-hover);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-family: var(--font);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-admin:hover {
+  background: rgba(77,166,255,0.08);
+  border-color: rgba(77,166,255,0.3);
+  color: var(--blue);
+}
+
+/* ── Footer ── */
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  body { padding: 1rem 0.75rem; }
+  .stats { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .stat { padding: 10px 12px; }
+  .stat-val { font-size: 22px; }
+  .stat-label { font-size: 10px; }
+  .grid { grid-template-columns: 1fr; gap: 10px; }
+  .header h1 { font-size: 16px; }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Loading shimmer */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.card.checking .router-name {
+  background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  color: transparent;
+}
 </style>
 </head>
 <body>
 <div class="dash">
+
+  <!-- Header -->
   <div class="header">
-    <h2>রাউটার ড্যাশবোর্ড</h2>
-    <button onclick="checkAll()">&#x21BB; সব চেক করুন</button>
+    <div class="header-left">
+      <div class="logo-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="6" width="20" height="8" rx="2"/>
+          <line x1="6" y1="10" x2="6" y2="10" stroke-width="3"/>
+          <line x1="10" y1="10" x2="10" y2="10" stroke-width="3"/>
+          <line x1="18" y1="14" x2="18" y2="18"/>
+          <line x1="6" y1="14" x2="6" y2="18"/>
+          <line x1="12" y1="14" x2="12" y2="18"/>
+        </svg>
+      </div>
+      <div>
+        <h1>রাউটার ড্যাশবোর্ড</h1>
+        <div class="header-sub">নেটওয়ার্ক মনিটরিং সিস্টেম</div>
+      </div>
+    </div>
+    <button class="btn-refresh" onclick="checkAll(this)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      </svg>
+      রিফ্রেশ
+    </button>
   </div>
 
-  <div class="note">
-    প্রতি ৩০ সেকেন্ডে অটো-রিফ্রেশ হয়। অ্যাডমিন প্যানেল বাটনে ক্লিক করলে auto-login চেষ্টা করবে।
-  </div>
-
+  <!-- Stats -->
   <div class="stats">
-    <div class="stat"><div class="stat-label">মোট রাউটার</div><div class="stat-val" id="total">7</div></div>
-    <div class="stat"><div class="stat-label">অনলাইন</div><div class="stat-val" id="online-count" style="color:#1D9E75">—</div></div>
-    <div class="stat"><div class="stat-label">অফলাইন</div><div class="stat-val" id="offline-count" style="color:#E24B4A">—</div></div>
+    <div class="stat s-total">
+      <div class="stat-label">মোট</div>
+      <div class="stat-val" id="total">7</div>
+    </div>
+    <div class="stat s-online">
+      <div class="stat-label">অনলাইন</div>
+      <div class="stat-val" id="online-count">—</div>
+    </div>
+    <div class="stat s-offline">
+      <div class="stat-label">অফলাইন</div>
+      <div class="stat-val" id="offline-count">—</div>
+    </div>
   </div>
 
+  <!-- Notice -->
+  <div class="notice">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    প্রতি ৩০ সেকেন্ডে অটো-রিফ্রেশ হয় · সব রাউটারের অ্যাডমিন প্যানেলে সরাসরি ঢোকা যাবে
+  </div>
+
+  <!-- Cards -->
   <div class="grid" id="router-grid"></div>
-  <div class="last-updated" id="last-updated"></div>
+
+  <!-- Footer -->
+  <div class="footer" id="last-updated"></div>
 </div>
 
 <script>
+// ── Brand SVG Icons ──
+const ICONS = {
+  ISP: `<svg viewBox="0 0 24 24" fill="none" stroke="#4da6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+    <path d="M2 17l10 5 10-5"/>
+    <path d="M2 12l10 5 10-5"/>
+  </svg>`,
+
+  ASUS: `<svg viewBox="0 0 24 24" fill="none" stroke="#22d3a0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="6" width="20" height="12" rx="2"/>
+    <circle cx="7" cy="12" r="1.5" fill="#22d3a0"/>
+    <circle cx="11" cy="12" r="1.5" fill="#22d3a0"/>
+    <line x1="15" y1="9" x2="20" y2="9"/>
+    <line x1="15" y1="12" x2="20" y2="12"/>
+    <line x1="15" y1="15" x2="18" y2="15"/>
+  </svg>`,
+
+  'TP-Link': `<svg viewBox="0 0 24 24" fill="none" stroke="#4da6ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+    <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/>
+    <circle cx="12" cy="12" r="2" fill="#4da6ff"/>
+  </svg>`,
+
+  Tenda: `<svg viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+    <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+    <circle cx="12" cy="20" r="1" fill="#f5a623"/>
+  </svg>`,
+
+  Ruijie: `<svg viewBox="0 0 24 24" fill="none" stroke="#f0556a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    <polyline points="9 12 11 14 15 10"/>
+  </svg>`,
+};
+
+const ICON_CLASS = {
+  ISP: 'icon-isp',
+  ASUS: 'icon-asus',
+  'TP-Link': 'icon-tplink',
+  Tenda: 'icon-tenda',
+  Ruijie: 'icon-ruijie',
+};
+
+// ── Router Data ──
 const routers = [
-  { id: 1, name: "ONU / Modem",   brand: "ISP",     ip: "192.168.100.1",                        user: "root", pass: "admin",    type: "basic", role: "ISP Gateway",    color: "#E6F1FB", text: "#0C447C" },
-  { id: 2, name: "Main Router",   brand: "ASUS",    ip: "192.168.1.1",                           user: "Himel", pass: "ish4243@Himel",   type: "basic", role: "Primary Router", color: "#E1F5EE", text: "#085041" },
-  { id: 3, name: "Sub Main (TL)", brand: "TP-Link", ip: "192.168.0.1",                           user: "admin", pass: "admin", type: "basic", role: "Sub Router",     color: "#EEEDFE", text: "#3C3489" },
-  { id: 4, name: "TP-Link (AB)",  brand: "TP-Link", ip: "192.168.0.101:8080",                         user: "Himel", pass: "ish4243Himel", type: "basic", role: "Access Point",   color: "#EEEDFE", text: "#3C3489" },
-  { id: 5, name: "Tenda (B3)",    brand: "Tenda",   ip: "192.168.0.102:8080",                         user: "",      pass: "ish4243Himel", type: "tenda", role: "Access Point",   color: "#FAEEDA", text: "#633806" },
-  { id: 6, name: "Tenda (S)",     brand: "Tenda",   ip: "192.168.0.103:8080",                         user: "",      pass: "ish4243Himel", type: "tenda", role: "Access Point",   color: "#FAEEDA", text: "#633806" },
-  { id: 7, name: "Ruijie (CD)",   brand: "Ruijie",  ip: "cloud-as.ruijienetworks.com/sso/login", user: "ishtiaqhossain50@gmail.com",      pass: "ish4243Himel",                 type: "cloud", role: "Access Point",   color: "#FAECE7", text: "#712B13" },
+  { id:1, name:"ONU / Modem",   brand:"ISP",     ip:"192.168.100.1",                          role:"ISP Gateway" },
+  { id:2, name:"Main Router",   brand:"ASUS",    ip:"192.168.1.1",                            role:"Primary Router" },
+  { id:3, name:"Sub Main (TL)", brand:"TP-Link", ip:"192.168.0.1",                            role:"Sub Router" },
+  { id:4, name:"TP-Link (AB)",  brand:"TP-Link", ip:"192.168.0.101:8080",                     role:"Access Point" },
+  { id:5, name:"Tenda (B3)",    brand:"Tenda",   ip:"192.168.0.102:8080",                     role:"Access Point" },
+  { id:6, name:"Tenda (S)",     brand:"Tenda",   ip:"192.168.0.103:8080",                     role:"Access Point" },
+  { id:7, name:"Ruijie (CD)",   brand:"Ruijie",  ip:"cloud-as.ruijienetworks.com/sso/login",  role:"Cloud AP" },
 ];
 
 const state = {};
-routers.forEach(r => state[r.id] = { status: "checking", ping: null });
+routers.forEach(r => state[r.id] = { status:"checking", ping:null });
 
-function openPanel(r) {
-  if (r.type === "basic" && r.user && r.pass) {
-    // Basic auth — credentials embedded in URL
-    window.open(`http://${r.user}:${r.pass}@${r.ip}`, "_blank");
-  } else if (r.type === "tenda") {
-    // Tenda — only password needed, try to autofill after page loads
-    const w = window.open(`http://${r.ip}`, "_blank");
-    const pass = r.pass;
-    let attempts = 0;
-    const interval = setInterval(() => {
-      attempts++;
-      try {
-        const doc = w.document;
-        const pwdInputs = doc.querySelectorAll('input[type="password"], input[name*="pass"], input[id*="pass"]');
-        if (pwdInputs.length > 0) {
-          pwdInputs[0].value = pass;
-          pwdInputs[0].dispatchEvent(new Event('input', { bubbles: true }));
-          pwdInputs[0].dispatchEvent(new Event('change', { bubbles: true }));
-          const submitBtn = doc.querySelector('button[type="submit"], input[type="submit"], .login-btn, #login-btn, .btn-login');
-          if (submitBtn) submitBtn.click();
-          clearInterval(interval);
-        }
-      } catch(e) {
-        // Cross-origin block — ব্রাউজারের saved password কাজ করবে
-      }
-      if (attempts > 20) clearInterval(interval);
-    }, 500);
-  } else if (r.type === "cloud") {
-    window.open(`https://${r.ip}`, "_blank");
-  } else {
-    window.open(`http://${r.ip}`, "_blank");
-  }
-}
-
+// ── Render ──
 function renderCards() {
   const grid = document.getElementById("router-grid");
   grid.innerHTML = routers.map(r => {
     const s = state[r.id];
-    const initials = r.brand.slice(0, 2).toUpperCase();
-    const pingHtml = s.ping !== null
-      ? `<span class="ping-val ${s.ping < 50 ? 'good' : s.ping < 150 ? 'mid' : 'bad'}">${s.ping}ms</span>`
-      : `<span class="ping-val mid">—</span>`;
+    const icon = ICONS[r.brand] || ICONS['TP-Link'];
+    const iconClass = ICON_CLASS[r.brand] || 'icon-isp';
+
+    let pingHtml;
+    if (s.ping !== null) {
+      const cls = s.ping < 50 ? 'ping-good' : s.ping < 150 ? 'ping-mid' : 'ping-bad';
+      pingHtml = `<span class="info-val ${cls}">${s.ping}ms</span>`;
+    } else {
+      pingHtml = `<span class="info-val ping-na">—</span>`;
+    }
+
+    const labelMap = { online:'অনলাইন', offline:'অফলাইন', checking:'চেক হচ্ছে' };
+
     return `
     <div class="card ${s.status}">
       <div class="card-top">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div class="brand-icon" style="background:${r.color};color:${r.text}">${initials}</div>
+        <div class="card-left">
+          <div class="brand-icon ${iconClass}">${icon}</div>
           <div>
             <div class="router-name">${r.name}</div>
-            <div class="router-brand">${r.brand} &mdash; ${r.ip}</div>
+            <div class="router-role">${r.brand} · ${r.role}</div>
           </div>
         </div>
-        <span class="badge ${s.status}">${s.status === 'online' ? 'অনলাইন' : s.status === 'offline' ? 'অফলাইন' : 'চেক হচ্ছে...'}</span>
+        <span class="badge ${s.status}">
+          <span class="dot"></span>
+          ${labelMap[s.status]}
+        </span>
       </div>
-      <div class="info-row"><span class="info-key">ভূমিকা</span><span class="info-val">${r.role}</span></div>
-      <div class="info-row"><span class="info-key">পিং</span>${pingHtml}</div>
-      <div class="card-actions">
-        <a class="btn-link" onclick="openPanel(routers[${r.id - 1}]); return false;" href="#">অ্যাডমিন প্যানেল খুলুন &#8599;</a>
+
+      <div class="info-rows">
+        <div class="info-row">
+          <span class="info-key">IP ঠিকানা</span>
+          <span class="info-val">${r.ip}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">পিং</span>
+          ${pingHtml}
+        </div>
       </div>
+
+      <a class="btn-admin" href="http://${r.ip}" target="_blank" rel="noopener">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        অ্যাডমিন প্যানেল
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/>
+        </svg>
+      </a>
     </div>`;
   }).join("");
+
   updateStats();
 }
 
 function updateStats() {
-  const online = Object.values(state).filter(s => s.status === "online").length;
+  const online  = Object.values(state).filter(s => s.status === "online").length;
   const offline = Object.values(state).filter(s => s.status === "offline").length;
-  document.getElementById("online-count").textContent = online;
+  document.getElementById("online-count").textContent  = online;
   document.getElementById("offline-count").textContent = offline;
   const now = new Date();
-  document.getElementById("last-updated").textContent = "সর্বশেষ আপডেট: " + now.toLocaleTimeString('bn-BD');
+  document.getElementById("last-updated").textContent =
+    "আপডেট: " + now.toLocaleTimeString('bn-BD');
 }
 
+// ── Check single router ──
 async function checkRouter(router) {
   state[router.id].status = "checking";
   renderCards();
@@ -158,28 +565,30 @@ async function checkRouter(router) {
   try {
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 3000);
-    const checkUrl = router.type === "cloud" ? `https://${router.ip}` : `http://${router.ip}`;
-    await fetch(checkUrl, { mode: "no-cors", signal: ctrl.signal, cache: "no-store" });
+    await fetch(`http://${router.ip}`, { mode:"no-cors", signal: ctrl.signal, cache:"no-store" });
     clearTimeout(timeout);
-    const ping = Date.now() - start;
-    state[router.id] = { status: "online", ping };
-  } catch (e) {
-    if (e.name === "AbortError") {
-      state[router.id] = { status: "offline", ping: null };
-    } else {
-      state[router.id] = { status: "online", ping: Date.now() - start };
-    }
+    state[router.id] = { status:"online", ping: Date.now() - start };
+  } catch(e) {
+    state[router.id] = e.name === "AbortError"
+      ? { status:"offline", ping:null }
+      : { status:"online",  ping: Date.now() - start };
   }
   renderCards();
 }
 
-function checkAll() {
+// ── Check all ──
+function checkAll(btn) {
+  if (btn) {
+    btn.classList.add('spinning');
+    setTimeout(() => btn.classList.remove('spinning'), 500);
+  }
   routers.forEach(r => checkRouter(r));
 }
 
+// Init
 renderCards();
 checkAll();
-setInterval(checkAll, 30000);
+setInterval(() => checkAll(), 30000);
 </script>
 </body>
 </html>
